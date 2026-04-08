@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 // University email pattern check
 const UNIVERSITY_PATTERNS = [
   /\.edu$/i,
@@ -78,7 +80,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/send-otp", {
+      const res = await fetch(`${API_URL}/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -151,7 +153,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/verify-otp", {
+      const res = await fetch(`${API_URL}/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpString }),

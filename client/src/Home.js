@@ -3,7 +3,8 @@ import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 
-const socket = io("http://localhost:5000", { autoConnect: false });
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const socket = io(API_URL, { autoConnect: false });
 
 // ===== SAME COURSE DATA AS PROFILE =====
 const COURSE_DATA = {
@@ -467,7 +468,7 @@ export default function Home() {
     if (!partnerEmail || hasReported) return;
 
     try {
-      const res = await fetch("http://localhost:5000/report-user", {
+      const res = await fetch(`${API_URL}/report-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

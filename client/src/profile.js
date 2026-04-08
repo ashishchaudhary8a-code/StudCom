@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 // ===== COURSE & STREAM DATA =====
 const COURSE_DATA = {
   Engineering: {
@@ -268,7 +270,7 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/save-profile", {
+      const res = await fetch(`${API_URL}/save-profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, email: user.email }),
