@@ -303,17 +303,28 @@ io.on("connection", (socket) => {
       matchUser.socket.partner = socket;
 
       // Increment totalConnections for both users
-      await User.findOneAndUpdate(
+      const userA = await User.findOneAndUpdate(
         { email: socket.email },
-        { $inc: { totalConnections: 1 } }
+        { $inc: { totalConnections: 1 } },
+        { new: true }
       );
-      await User.findOneAndUpdate(
+      const userB = await User.findOneAndUpdate(
         { email: matchUser.socket.email },
-        { $inc: { totalConnections: 1 } }
+        { $inc: { totalConnections: 1 } },
+        { new: true }
       );
 
-      socket.emit("matched", { partnerEmail: matchUser.socket.email, initiator: true });
-      matchUser.socket.emit("matched", { partnerEmail: socket.email, initiator: false });
+      const profileA = {
+        username: userA?.username, college: userA?.college, country: userA?.country,
+        year: userA?.year, avatar: userA?.avatar, course: userA?.course, stream: userA?.stream
+      };
+      const profileB = {
+        username: userB?.username, college: userB?.college, country: userB?.country,
+        year: userB?.year, avatar: userB?.avatar, course: userB?.course, stream: userB?.stream
+      };
+
+      socket.emit("matched", { partnerEmail: matchUser.socket.email, initiator: true, partnerProfile: profileB });
+      matchUser.socket.emit("matched", { partnerEmail: socket.email, initiator: false, partnerProfile: profileA });
     } else {
       queue.push({ socket, filter });
       socket.emit("waiting");

@@ -138,6 +138,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [toast, setToast] = useState(null);
   const [partnerEmail, setPartnerEmail] = useState(null);
+  const [partnerProfile, setPartnerProfile] = useState(null);
   const [hasReported, setHasReported] = useState(false);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isVideoOn, setIsVideoOn] = useState(true);
@@ -209,6 +210,7 @@ export default function Home() {
     socket.on("matched", async (data) => {
       setStatus("connected");
       setPartnerEmail(data?.partnerEmail || null);
+      setPartnerProfile(data?.partnerProfile || null);
       setHasReported(false);
       setChat((prev) => [
         ...prev,
@@ -241,6 +243,7 @@ export default function Home() {
 
     socket.on("partner-left", () => {
       setStatus("disconnected");
+      setPartnerProfile(null);
       setChat((prev) => [
         ...prev,
         { sender: "system", text: "Stranger has disconnected." },
@@ -251,6 +254,7 @@ export default function Home() {
     // When partner leaves, we get auto-requeued by the server
     socket.on("partner-left-requeue", () => {
       endCall();
+      setPartnerProfile(null);
       setChat((prev) => [
         ...prev,
         { sender: "system", text: "Stranger left. Finding you someone new..." },
@@ -444,6 +448,7 @@ export default function Home() {
       endCall();
       setChat([]);
     }
+    setPartnerProfile(null);
     setIsMicOn(true);
     setIsVideoOn(true);
     setStatus("waiting");
@@ -459,6 +464,7 @@ export default function Home() {
     ]);
     setStatus("disconnected");
     setPartnerEmail(null);
+    setPartnerProfile(null);
     endCall();
   };
 
@@ -700,7 +706,24 @@ export default function Home() {
                 <div className="video-remote">
                   <video ref={remoteVideo} autoPlay playsInline />
                   {status === "connected" ? (
-                    <span className="video-label">Stranger</span>
+                    <>
+                      {partnerProfile ? (
+                        <div className="partner-info-overlay animate-fadeIn">
+                           <div className="partner-info-header">
+                             <span className="partner-avatar">{partnerProfile.avatar || "👤"}</span>
+                             <span className="partner-username">{partnerProfile.username || "Stranger"}</span>
+                             {partnerProfile.country && <span className="partner-country">{partnerProfile.country}</span>}
+                           </div>
+                           <div className="partner-info-details">
+                             {partnerProfile.college && <span>🎓 {partnerProfile.college}</span>}
+                             {partnerProfile.year && <span>📅 {partnerProfile.year}</span>}
+                             {partnerProfile.course && <span>📚 {partnerProfile.course} {partnerProfile.stream ? `- ${partnerProfile.stream}` : ''}</span>}
+                           </div>
+                        </div>
+                      ) : (
+                        <span className="video-label">Stranger</span>
+                      )}
+                    </>
                   ) : (
                     <div className="video-placeholder">
                       <span className="placeholder-icon">👤</span>
