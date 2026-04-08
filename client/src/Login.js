@@ -161,7 +161,7 @@ export default function Login() {
 
       if (data.success) {
         localStorage.setItem("user", JSON.stringify(data.user));
-        showToast("Welcome to StudCom! 🎉");
+        showToast("Welcome to Comugle! 🎉");
         setTimeout(() => {
           window.location.href = "/profile";
         }, 500);
@@ -195,8 +195,8 @@ export default function Login() {
       <div className="login-card glass-card-strong">
         {/* Logo */}
         <div className="login-logo">
-          <img src="/logo.png" alt="StudCom Logo" style={{ width: "64px", height: "64px", borderRadius: "16px", marginBottom: "16px" }} />
-          <h1 className="text-gradient">StudCom</h1>
+          <img src="/logo.png" alt="Comugle Logo" style={{ width: "64px", height: "64px", borderRadius: "16px", marginBottom: "16px" }} />
+          <h1 className="text-gradient">Comugle</h1>
           <p className="tagline">Meet students from your university</p>
         </div>
 

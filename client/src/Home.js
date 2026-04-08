@@ -636,8 +636,8 @@ export default function Home() {
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-logo">
-          <img src="/logo.png" alt="StudCom" style={{ width: "36px", height: "36px", borderRadius: "8px" }} />
-          <span className="nav-logo-text text-gradient">StudCom</span>
+          <img src="/logo.png" alt="Comugle" style={{ width: "36px", height: "36px", borderRadius: "8px" }} />
+          <span className="nav-logo-text text-gradient">Comugle</span>
         </div>
 
         <div className="nav-status">

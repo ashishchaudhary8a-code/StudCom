@@ -106,10 +106,10 @@ app.post("/send-otp", async (req, res) => {
     await transporter.sendMail({
       from: "ashishchaudhary8a@gmail.com",
       to: email,
-      subject: "StudCom - Your Verification Code",
+      subject: "Comugle - Your Verification Code",
       html: `
         <div style="font-family: 'Inter', Arial, sans-serif; max-width: 420px; margin: 0 auto; padding: 40px 30px; background: #0a0a1a; border-radius: 16px;">
-          <h1 style="color: #f1f5f9; font-size: 24px; margin-bottom: 8px;">StudCom 💬</h1>
+          <h1 style="color: #f1f5f9; font-size: 24px; margin-bottom: 8px;">Comugle 💬</h1>
           <p style="color: #94a3b8; font-size: 14px; margin-bottom: 24px;">Your verification code</p>
           <div style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
             <span style="color: white; font-size: 32px; font-weight: 800; letter-spacing: 8px;">${otp}</span>
@@ -256,7 +256,7 @@ app.post("/report-user", async (req, res) => {
 
     res.json({
       success: true,
-      message: "Report submitted successfully. Thank you for helping keep StudCom safe.",
+      message: "Report submitted successfully. Thank you for helping keep Comugle safe.",
     });
   } catch (err) {
     console.error("Report error:", err);
