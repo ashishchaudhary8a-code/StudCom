@@ -29,7 +29,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(cors(corsOptions));
 const io = new Server(server, {
   cors:{
     origin: allowedOrigins,
@@ -120,39 +119,39 @@ const transporter = nodemailer.createTransport({
 
 // ===== SEND OTP =====
 app.post("/send-otp", otpLimiter, async (req, res) => {
-  const { email } = req.body;
-
-  if (!isUniversityEmail(email)) {
-    return res.json({
-      success: false,
-      message: "Only university email addresses are accepted (.edu, .ac.in, etc.)",
-    });
-  }
-
-  // Check if user is blocked
-  const existingUser = await User.findOne({ email });
-  if (existingUser && existingUser.isBlocked()) {
-    const unblockDate = existingUser.blockedUntil.toLocaleDateString();
-    return res.json({
-      success: false,
-      message: `Your account is blocked due to excessive reports. You will be unblocked on ${unblockDate}.`,
-    });
-  }
-
-  const crypto = require("crypto");
-  const otp = crypto.randomInt(100000, 999999);
-  otpStore[email] = {
-    otp,
-    expiresAt: Date.now() + 60000 // 1 minute expiry
-  };
-  setTimeout(() => {
-    if (otpStore[email]) {
-      delete otpStore[email];
-      console.log(`🧹 Memory Cleaned: Expired OTP removed for ${email}`)
-    }
-  }, 60000);
-
   try {
+    const { email } = req.body;
+
+    if (!isUniversityEmail(email)) {
+      return res.json({
+        success: false,
+        message: "Only university email addresses are accepted (.edu, .ac.in, etc.)",
+      });
+    }
+
+    // Check if user is blocked
+    const existingUser = await User.findOne({ email });
+    if (existingUser && existingUser.isBlocked()) {
+      const unblockDate = existingUser.blockedUntil.toLocaleDateString();
+      return res.json({
+        success: false,
+        message: `Your account is blocked due to excessive reports. You will be unblocked on ${unblockDate}.`,
+      });
+    }
+
+    const crypto = require("crypto");
+    const otp = crypto.randomInt(100000, 999999);
+    otpStore[email] = {
+      otp,
+      expiresAt: Date.now() + 60000 // 1 minute expiry
+    };
+    setTimeout(() => {
+      if (otpStore[email]) {
+        delete otpStore[email];
+        console.log(`🧹 Memory Cleaned: Expired OTP removed for ${email}`)
+      }
+    }, 60000);
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -171,8 +170,8 @@ app.post("/send-otp", otpLimiter, async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.log(err);
-    res.json({ success: false, message: "Error sending email. Please try again." });
+    console.error("Send OTP error:", err);
+    res.json({ success: false, message: "Error sending OTP. Please try again." });
   }
 });
 

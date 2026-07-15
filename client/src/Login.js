@@ -160,7 +160,11 @@ export default function Login() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem("user", JSON.stringify(data.user));
+        // Save token standalone for socket auth fallback
+        localStorage.setItem("comugle_token", data.token);
+        // Merge token into the user object so Home.js can access it
+        const userData = { ...data.user, token: data.token };
+        localStorage.setItem("user", JSON.stringify(userData));
         showToast("Welcome to Comugle! 🎉");
         setTimeout(() => {
           window.location.href = "/profile";
